@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask-SocketIO-Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+        .feedback {
+            font-size: 1em;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flask-SocketIO-Chat</h1>
+    <form id="chatForm" method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <label for="{{ form.name.id }}">{{ form.name.label }}</label>
+            {{ form.name(class="form-control") }}
+            {% for error in form.name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.room.id }}">{{ form.room.label }}</label>
+            {{ form.room(class="form-control") }}
+            {% for error in form.room.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+    </form>
+
+    <script>
+        document.getElementById('chatForm').addEventListener('submit', function(event) {
+            // Basic form validation
+            const name = document.querySelector('[name="name"]').value;
+            const room = document.querySelector('[name="room"]').value;
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = '';
+
+            if (!name || !room) {
+                feedback.textContent = 'Please fill in all fields.';
+                feedback.style.color = 'red';
+                event.preventDefault(); // Prevent form submission
+            } else {
+                feedback.textContent = 'Form submitted successfully!';
+                feedback.style.color = 'green';
+            }
+        });
+    </script>
+</body>
+</html>
